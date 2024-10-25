@@ -13,7 +13,7 @@ import {
   SidebarProvider,
 } from "@/components/ui/sidebar";
 
-import { RedirectToSignIn } from "@clerk/nextjs";
+import { RedirectToSignIn, SignOutButton } from "@clerk/nextjs";
 import {
   Authenticated,
   Unauthenticated,
@@ -25,6 +25,11 @@ import Link from "next/link";
 import { api } from "../../convex/_generated/api";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { AvatarFallback } from "@/components/ui/avatar";
+import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import {
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 
 export default function DashboardLayout({
   children,
@@ -73,15 +78,32 @@ function DashboardSidebar() {
             </SidebarGroupAction>
           </SidebarGroup>
         </SidebarGroup>
-        <SidebarFooter>
-          <SidebarGroup>
-            <Avatar>
-              <AvatarImage src={user.image} />
-              <AvatarFallback>{user.username[0]}</AvatarFallback>
-            </Avatar>
-            <p>{user.username}</p>
-          </SidebarGroup>
-        </SidebarFooter>
+        <SidebarContent>
+          <SidebarFooter>
+            <SidebarGroup>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  <SidebarMenuItem>
+                    <DropdownMenuTrigger asChild>
+                      <SidebarMenuButton className="flex items-center">
+                        <Avatar className="size-6">
+                          <AvatarImage src={user.image} />
+                          <AvatarFallback>{user.username[0]}</AvatarFallback>
+                        </Avatar>
+                        <p className="font-medium">{user.username}</p>
+                      </SidebarMenuButton>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem asChild>
+                        <SignOutButton />
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </SidebarMenuItem>
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </SidebarFooter>
+        </SidebarContent>
       </SidebarContent>
     </Sidebar>
   );
