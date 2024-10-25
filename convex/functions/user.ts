@@ -1,4 +1,4 @@
-import { internalMutation } from "../_generated/server";
+import { internalMutation, MutationCtx, QueryCtx } from "../_generated/server";
 import { v } from "convex/values";
 
 export const upsert = internalMutation({
@@ -31,13 +31,18 @@ export const upsert = internalMutation({
 export const remove = internalMutation({
   args: { clerkId: v.string() },
   handler: async (ctx, { clerkId }) => {
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
-      .unique();
-
     if (user) {
       await ctx.db.delete(user._id);
     }
   },
 });
+
+const getUserByClearId = async (
+  ctx: QueryCtx | MutationCtx,
+  clerkId: string
+) => {
+  const user = await ctx.db
+    .query("users")
+    .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
+    .unique();
+};
