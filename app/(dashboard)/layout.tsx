@@ -52,21 +52,23 @@ export default function DashboardLayout({
 function DashboardSidebar() {
   const user = useQuery(api.functions.user.get);
   if (!user) {
-    return <p>Loading...</p>;
+    return null;
   }
   return (
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <Link href="/friends">
-                  <User2Icon />
-                  Friends
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="friends">
+                    <User2Icon />
+                    Friends
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
           </SidebarGroupContent>
           <SidebarGroup>
             <SidebarGroupLabel>Direct Messages</SidebarGroupLabel>
@@ -76,35 +78,33 @@ function DashboardSidebar() {
             </SidebarGroupAction>
           </SidebarGroup>
         </SidebarGroup>
-        <SidebarContent>
-          <SidebarFooter>
-            <SidebarGroup>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <SidebarMenuButton className="flex items-center">
-                          <Avatar className="size-6">
-                            <AvatarImage src={user.image} />
-                            <AvatarFallback>{user.username[0]}</AvatarFallback>
-                          </Avatar>
-                          <p className="font-medium">{user.username}</p>
-                        </SidebarMenuButton>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuItem asChild>
-                          <SignOutButton />
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </SidebarFooter>
-        </SidebarContent>
       </SidebarContent>
+      <SidebarFooter>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <SidebarMenuButton className="flex items-center">
+                      <Avatar className="size-6">
+                        <AvatarImage src={user.image} />
+                        <AvatarFallback>{user.username[0]}</AvatarFallback>
+                      </Avatar>
+                      <p className="font-medium">{user.username}</p>
+                    </SidebarMenuButton>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem asChild>
+                      <SignOutButton />
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarFooter>
     </Sidebar>
   );
 }
