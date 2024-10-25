@@ -14,18 +14,16 @@ import {
 } from "@/components/ui/sidebar";
 
 import { RedirectToSignIn, SignOutButton } from "@clerk/nextjs";
-import {
-  Authenticated,
-  Unauthenticated,
-  useQueries,
-  useQuery,
-} from "convex/react";
+import { Authenticated, Unauthenticated, useQuery } from "convex/react";
 import { PlusIcon, Sidebar, User2Icon } from "lucide-react";
 import Link from "next/link";
 import { api } from "../../convex/_generated/api";
-import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { AvatarFallback } from "@/components/ui/avatar";
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   DropdownMenuContent,
   DropdownMenuItem,
@@ -54,7 +52,7 @@ export default function DashboardLayout({
 function DashboardSidebar() {
   const user = useQuery(api.functions.user.get);
   if (!user) {
-    return null;
+    return <p>Loading...</p>;
   }
   return (
     <Sidebar>
@@ -84,20 +82,22 @@ function DashboardSidebar() {
               <SidebarGroupContent>
                 <SidebarMenu>
                   <SidebarMenuItem>
-                    <DropdownMenuTrigger asChild>
-                      <SidebarMenuButton className="flex items-center">
-                        <Avatar className="size-6">
-                          <AvatarImage src={user.image} />
-                          <AvatarFallback>{user.username[0]}</AvatarFallback>
-                        </Avatar>
-                        <p className="font-medium">{user.username}</p>
-                      </SidebarMenuButton>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem asChild>
-                        <SignOutButton />
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <SidebarMenuButton className="flex items-center">
+                          <Avatar className="size-6">
+                            <AvatarImage src={user.image} />
+                            <AvatarFallback>{user.username[0]}</AvatarFallback>
+                          </Avatar>
+                          <p className="font-medium">{user.username}</p>
+                        </SidebarMenuButton>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem asChild>
+                          <SignOutButton />
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </SidebarMenuItem>
                 </SidebarMenu>
               </SidebarGroupContent>
