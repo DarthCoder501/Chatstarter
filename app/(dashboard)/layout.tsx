@@ -15,7 +15,8 @@ import {
 
 import { RedirectToSignIn, SignOutButton } from "@clerk/nextjs";
 import { Authenticated, Unauthenticated, useQuery } from "convex/react";
-import { PlusIcon, Sidebar, User2Icon } from "lucide-react";
+import { PlusIcon, User2Icon } from "lucide-react";
+import { Sidebar } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { api } from "../../convex/_generated/api";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
