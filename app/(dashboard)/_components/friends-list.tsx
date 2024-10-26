@@ -1,6 +1,6 @@
 import { Avatar } from "@radix-ui/react-avatar";
 import { api } from "../../../convex/_generated/api";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { CheckIcon, MessageCircleIcon, XIcon } from "lucide-react";
@@ -14,6 +14,8 @@ import { cn } from "@/lib/utils";
 
 export function PendingFriendsList() {
   const friends = useQuery(api.functions.friend.listPending);
+  const updateStatus = useMutation(api.functions.friend.updateStatus);
+
   return (
     <div className="flex flex-col divide-y">
       <h2 className="text-xs font-medium text-muted-foreground p-2.5">
@@ -34,8 +36,14 @@ export function PendingFriendsList() {
             title="Accept"
             icon={<CheckIcon />}
             className="bg-green-100"
+            onClick={() => updateStatus({ id: friend._id, status: "accepted" })}
           />
-          <IconButton title="Reject" icon={<XIcon />} className="bg-red-100" />
+          <IconButton
+            title="Reject"
+            icon={<XIcon />}
+            className="bg-red-100"
+            onClick={() => updateStatus({ id: friend._id, status: "rejected" })}
+          />
         </FriendItem>
       ))}
     </div>
@@ -43,7 +51,9 @@ export function PendingFriendsList() {
 }
 
 export function AcceptedFriendsList() {
-  const friends = useQuery(api.functions.friend.listPending);
+  const friends = useQuery(api.functions.friend.listAccepted);
+  const updateStatus = useMutation(api.functions.friend.updateStatus);
+
   return (
     <div className="flex flex-col divide-y">
       <h2 className="text-xs font-medium text-muted-foreground p-2.5">
@@ -53,12 +63,21 @@ export function AcceptedFriendsList() {
         <FriendsListEmpty>You don't have friends yet</FriendsListEmpty>
       )}
       {friends?.map((friend, index) => (
-        <FriendItem key={index} username={friend.username} image={friend.image}>
-          <IconButton title="Start DM" icon={<MessageCircleIcon />} />
+        <FriendItem
+          key={index}
+          username={friend.user.username}
+          image={friend.user.image}
+        >
+          <IconButton
+            title="Start DM"
+            icon={<MessageCircleIcon />}
+            onClick={() => {}}
+          />
           <IconButton
             title="Remove Friend"
             icon={<XIcon />}
             className="bg-red-100"
+            onClick={() => updateStatus({ id: friend._id, status: "rejected" })}
           />
         </FriendItem>
       ))}
@@ -78,10 +97,12 @@ function IconButton({
   title,
   className,
   icon,
+  onClick,
 }: {
   title: string;
   className?: string;
   icon: React.ReactNode;
+  onClick: () => void;
 }) {
   return (
     <Tooltip>
@@ -90,6 +111,7 @@ function IconButton({
           className={cn("rounded-full", className)}
           variant="outline"
           size="icon"
+          onClick={onClick}
         >
           {icon}
           <span className="sr-only">{title}</span>

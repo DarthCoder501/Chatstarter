@@ -35,23 +35,23 @@ export const listAccepted = authenticatedQuery({
   },
 });
 
-export const createFriendReqeust = authenticatedMutation({
+export const createFriendRequest = authenticatedMutation({
   args: { username: v.string() },
   handler: async (ctx, { username }) => {
     const user = await ctx.db
       .query("users")
       .withIndex("by_username", (q) => q.eq("username", username))
       .unique();
-      if (!user) {
-        throw new Error("User not found");
-      } else if (user._id === ctx.user._id) {
-        throw new Error("Cannot add yourself");
-      }
-      await ctx.db.insert("friends", {
-        user1: ctx.user._id,
-        user2: user._id,
-        status: "pending",
-      });
+    if (!user) {
+      throw new Error("User not found");
+    } else if (user._id === ctx.user._id) {
+      throw new Error("Cannot add yourself");
+    }
+    await ctx.db.insert("friends", {
+      user1: ctx.user._id,
+      user2: user._id,
+      status: "pending",
+    });
   },
 });
 
