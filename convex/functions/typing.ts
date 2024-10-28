@@ -43,18 +43,17 @@ export const upsert = authenticatedMutation({
       await ctx.db.patch(existing._id, { expireAt });
       // return existing._id;
     } else {
-        await ctx.db.insert("typingIndicators", {
-            user: ctx.user._id,
-            directMessage, 
-            expireAt,
-        });
-    }
-    await ctx.scheduler.runAfter(expireAt, internal.functions.typing.remove, {
-        directMessage,
+      await ctx.db.insert("typingIndicators", {
         user: ctx.user._id,
+        directMessage,
         expireAt,
       });
     }
+    await ctx.scheduler.runAfter(expireAt, internal.functions.typing.remove, {
+      directMessage,
+      user: ctx.user._id,
+      expireAt,
+    });
   },
 });
 /*
