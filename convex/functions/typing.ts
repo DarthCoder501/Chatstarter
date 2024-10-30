@@ -38,10 +38,10 @@ export const upsert = authenticatedMutation({
         q.eq("user", ctx.user._id).eq("directMessage", directMessage)
       )
       .unique();
-    const expireAt = Date.now() + 5000;
+    const expireAt = Math.floor(Date.now() / 1000) + 5; // Set expireAt to 5 seconds in the future
     if (existing) {
       await ctx.db.patch(existing._id, { expireAt });
-      // return existing._id;
+      return existing._id;
     } else {
       await ctx.db.insert("typingIndicators", {
         user: ctx.user._id,
@@ -56,14 +56,6 @@ export const upsert = authenticatedMutation({
     });
   },
 });
-/*
-    else {
-      const newIndicatorId = await ctx.db.insert("typingIndicators", {
-        user: ctx.user._id,
-        directMessage,
-        expireAt,
-      });
-*/
 
 export const remove = internalMutation({
   args: {
